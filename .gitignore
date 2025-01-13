@@ -1,0 +1,50 @@
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/vendor/
+
+# Build artifacts
+/bin/
+/dist/
+*.log
+
+# Environment & configs
+.env
+*.env
+/configs/*.local.yaml
+/configs/*.prod.yaml
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Test files
+coverage.txt
+coverage.html
+*.cover
+*.prof
+
+# Binary files
+reverse-proxy
+/cmd/proxy/proxy
+
+# Temporary files
+*.tmp
+/tmp/
+.tmp/
+
+# Docker volumes
+docker-volumes/
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
