@@ -51,3 +51,7 @@ docker-volumes/
 
 
 __debug_*
+
+# Ignore VSCode workspace directory  
+.vscode/  
+*.code-workspace
