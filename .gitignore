@@ -48,3 +48,6 @@ docker-volumes/
 *.pem
 *.key
 *.crt
+
+
+*__debug
