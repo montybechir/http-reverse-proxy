@@ -50,4 +50,4 @@ docker-volumes/
 *.crt
 
 
-*__debug
+__debug_*

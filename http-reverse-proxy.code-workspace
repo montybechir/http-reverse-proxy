@@ -1,0 +1,37 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "always"
+		},
+		"eslint.validate": [
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact"
+		],
+		"workbench.tree.indent": 20,
+
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+                "name": "Debug Proxy",
+                "type": "go",
+                "request": "launch",
+                "mode": "debug",
+                "program": "${workspaceFolder}/cmd/proxy/main.go",
+                "cwd": "${workspaceFolder}",
+                "envFile": "${workspaceFolder}/.env"
+
+            },
+		],
+		"compounds": []
+	}
+}
