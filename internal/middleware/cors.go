@@ -2,11 +2,14 @@ package middleware
 
 import (
 	"http-reverse-proxy/pkg/models"
-	"log"
 	"net/http"
+	"net/url"
+	"strings"
+
+	"go.uber.org/zap"
 )
 
-func CORSMiddleware(cfg *models.CORSConfig) Middleware {
+func CORSMiddleware(cfg *models.CORSConfig, log *zap.Logger) Middleware {
 
 	// Convert slice to map for O(1) lookup
 	originsMap := make(map[string]bool)
@@ -18,16 +21,13 @@ func CORSMiddleware(cfg *models.CORSConfig) Middleware {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			origin := r.Header.Get("Origin")
 
-			// Allow requests with no origin (like curl)
-			if origin == "" {
-				next.ServeHTTP(w, r)
-				return
-			}
-
-			// Check if origin is allowed
-			if !originsMap[origin] {
+			// Validate origin
+			if !isOriginAllowed(origin, originsMap, cfg) {
 				if cfg.Debug {
-					log.Printf("CORS: Rejected origin: %s", origin)
+					log.Debug("CORS rejected",
+						zap.String("origin", origin),
+						zap.Strings("allowed", cfg.AllowedOrigins),
+					)
 				}
 				http.Error(w, "Origin not allowed", http.StatusForbidden)
 				return
@@ -48,4 +48,27 @@ func CORSMiddleware(cfg *models.CORSConfig) Middleware {
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+func isOriginAllowed(origin string, originsMap map[string]bool, cfg *models.CORSConfig) bool {
+	// Check exact match or if all origins are allowed
+	if originsMap[origin] || originsMap["*"] {
+		return true
+	}
+
+	// Check wildcard domains
+	originURL, err := url.Parse(origin)
+	if err != nil {
+		return false
+	}
+
+	host := originURL.Host
+	for allowed := range originsMap {
+		if strings.HasPrefix(allowed, "*.") &&
+			strings.HasSuffix(host, allowed[1:]) {
+			return true
+		}
+	}
+
+	return false
 }

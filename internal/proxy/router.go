@@ -17,8 +17,8 @@ func (rp *ReverseProxy) SetupRoutes() *http.ServeMux {
 	// checkers := []healthcheck.HealthChecker{
 	// 	healthcheck.NewProxyHealthChecker(rp.Config.Backends),
 	// }
-	// Register health and status handlers
-	//mux.HandleFunc("/health", healthcheck.HealthHandler(rp.Logger))
+	// //Register health and status handlers
+	// mux.HandleFunc("/health", healthcheck.HealthHandler(rp.Logger))
 	mux.HandleFunc("/status", rp.StatusHandler)
 
 	// Proxy all other routes

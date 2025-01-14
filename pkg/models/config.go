@@ -3,14 +3,11 @@ package models
 import "time"
 
 type Config struct {
-	Server    ServerConfig `mapstructure:"server"`
-	Backends  []string     `mapstructure:"backends"`
-	RateLimit struct {
-		RequestsPerMinute int `mapstructure:"requests_per_minute"`
-		Burst             int `mapstructure:"burst"`
-	} `mapstructure:"rate_limit"`
-	CORS    CORSConfig    `mapstructure:"cors"`
-	Logging LoggingConfig `mapstructure:"logging"`
+	Server    ServerConfig    `mapstructure:"server"`
+	Backends  []string        `mapstructure:"backends"`
+	RateLimit RateLimitConfig `mapstructure:"rate_limit"`
+	CORS      CORSConfig      `mapstructure:"cors"`
+	Logging   LoggingConfig   `mapstructure:"logging"`
 }
 
 type LoggingConfig struct {
@@ -39,6 +36,17 @@ type ServerConfig struct {
 	// TLSConfig      *TLSConfig `mapstructure:"tls,omitempty"`
 }
 
+type BackendServerConfig struct {
+	Address  string `mapstructure:"address"`
+	Response string `mapstructure:"response"`
+}
+
+// ServerConfig holds the configuration for the server.
+type BackendConfig struct {
+	Logging LoggingConfig       `mapstructure:"logging"`
+	Server  BackendServerConfig `mapstructure:"server"`
+}
+
 type HealthStatus struct {
 	Status    string            `json:"status"`
 	Timestamp time.Time         `json:"timestamp"`
@@ -46,4 +54,9 @@ type HealthStatus struct {
 	Uptime    string            `json:"uptime,omitempty"`
 	Checks    map[string]string `json:"checks,omitempty"`
 	Services  map[string]bool   `json:"services"`
+}
+
+type RateLimitConfig struct {
+	RequestsPerMinute int `mapstructure:"requests_per_minute"`
+	Burst             int `mapstructure:"burst"`
 }
