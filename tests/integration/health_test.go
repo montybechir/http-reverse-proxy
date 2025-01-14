@@ -44,7 +44,7 @@ func TestHealthChecks(t *testing.T) {
 	}()
 
 	// Wait to allow health checker to detect changes.
-	time.Sleep(20 * time.Second)
+	time.Sleep(10 * time.Second)
 
 	// Send a request to ensure Backend A is responding initially.
 	proxyURL := "http://" + httpServer.Addr + "/healthtest"
