@@ -60,6 +60,12 @@ func StartServer(configPath string) error {
 
 	// Initialize ServeMux and handlers
 	mux := http.NewServeMux()
+
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(100 * time.Millisecond)
 		fmt.Fprintf(w, config.Server.Response)

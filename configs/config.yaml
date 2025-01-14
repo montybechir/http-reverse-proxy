@@ -4,14 +4,12 @@ server:
   write_timeout: 10s
   idle_timeout: 120s
   max_header_bytes: 1048576 # 1MB
-  # tls:
-  #   enabled: false
-  #   cert_file: "certs/server.crt"
-  #   key_file: "certs/server.key"
 
 backends:
-  - "http://localhost:9090"
-  - "http://localhost:9091"
+  - http://backenda:60408
+  - http://backendb:60409
+  # - "http://localhost:60408"
+  # - "http://localhost:60409"
 
 rate_limit:
   requests_per_minute: 100
