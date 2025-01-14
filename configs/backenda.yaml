@@ -1,0 +1,6 @@
+logging:
+  level: "info"
+
+server:
+  address: ":9090"
+  response: "Response from Backend A"

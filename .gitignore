@@ -50,4 +50,8 @@ docker-volumes/
 *.crt
 
 
-*__debug
+__debug_*
+
+# Ignore VSCode workspace directory  
+.vscode/  
+*.code-workspace

@@ -1,0 +1,51 @@
+server:
+  address: ":8080"
+  read_timeout: 5s
+  write_timeout: 10s
+  idle_timeout: 120s
+  max_header_bytes: 1048576 # 1MB
+  # tls:
+  #   enabled: false
+  #   cert_file: "certs/server.crt"
+  #   key_file: "certs/server.key"
+
+backends:
+  - "http://localhost:9090"
+  - "http://localhost:9091"
+
+rate_limit:
+  requests_per_minute: 100
+  burst: 10
+
+cors:
+  allowed_origins:
+    - "*"
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "OPTIONS"
+  allowed_headers:
+    - "Content-Type"
+    - "Authorization"
+  exposed_headers:
+    - "X-Custom-Header"
+  allow_credentials: true
+  max_age: 3600
+  debug: true
+
+authentication:
+  enabled: true
+  required_token: "some secret token"
+
+logging:
+  level: "INFO"
+  format: "json"
+  output: "stdout"
+
+health_check:
+  frequency: 10s
+  timeout: 5s
+  healthy_threshold: 2
+  path: /health
