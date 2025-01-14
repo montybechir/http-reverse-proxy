@@ -297,3 +297,7 @@ Enhancing the security posture of the reverse proxy involves several strategies:
 - AI tools: Github Copilot + Azure AI Services
 - Microservices + Go: https://www.youtube.com/watch?v=GtSg1H7SU5Y&list=PLmD8u-IFdreyh6EUfevBcbiuCKzFk0EW_&index=12&ab_channel=NicJackson
 - HTTP Server Best Practices: https://grafana.com/blog/2024/02/09/how-i-write-http-services-in-go-after-13-years/
+
+# Feedback
+
+Any feedback you have would be helpful. I've opened a PR in feedback/update-read-me.
