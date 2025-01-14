@@ -33,6 +33,7 @@ cors:
     - "X-Custom-Header"
   allow_credentials: true
   max_age: 3600
+  debug: true
 
 authentication:
   enabled: true

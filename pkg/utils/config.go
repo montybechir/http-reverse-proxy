@@ -3,6 +3,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"http-reverse-proxy/pkg/models"
 
 	"github.com/spf13/viper"
@@ -10,19 +11,38 @@ import (
 
 // LoadConfig reads config.yaml and unmarshals it into Config struct
 func LoadConfig(path string) (*models.Config, error) {
-	viper.SetConfigFile(path)
-	viper.SetConfigType("yaml")
+	v := viper.New() // Create a new Viper instance
+	v.SetConfigFile(path)
+	v.SetConfigType("yaml")
 
-	// Read in environment variables that match
-	viper.AutomaticEnv()
+	v.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
+	if err := v.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("reading config file: %w", err)
 	}
 
 	var config models.Config
-	if err := viper.Unmarshal(&config); err != nil {
-		return nil, err
+	if err := v.Unmarshal(&config); err != nil {
+		return nil, fmt.Errorf("unmarshalling config: %w", err)
+	}
+
+	return &config, nil
+}
+
+func LoadBackendConfig(path string) (*models.BackendConfig, error) {
+	v := viper.New()
+	v.SetConfigFile(path)
+	v.SetConfigType("yaml")
+
+	v.AutomaticEnv()
+
+	if err := v.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("reading config file: %w", err)
+	}
+
+	var config models.BackendConfig
+	if err := v.Unmarshal(&config); err != nil {
+		return nil, fmt.Errorf("unmarshalling config: %w", err)
 	}
 
 	return &config, nil
