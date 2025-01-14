@@ -78,7 +78,6 @@ func StartServer(configPath string) error {
 	}
 
 	// Start server in a goroutine
-	fmt.Println("----Config", config, "ConfigPath:", configPath)
 	go func() {
 		zapLogger.Info("Server is starting", zap.String("address", config.Server.Address))
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

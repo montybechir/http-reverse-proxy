@@ -3,6 +3,7 @@ package loadbalancer
 import (
 	"errors"
 	"fmt"
+	"http-reverse-proxy/pkg/models"
 	"net/http"
 	"net/url"
 	"strings"
@@ -12,28 +13,18 @@ import (
 	"go.uber.org/zap"
 )
 
-type LoadBalancer interface {
-	NextBackend() (*url.URL, error)
-	Config() Config
-}
-
 type RoundRobin struct {
 	backends        []*url.URL
 	current         int
 	mu              sync.Mutex
-	config          Config
+	config          *models.Config
 	healthCheckFreq time.Duration
 	healthStatus    map[string]bool
 	logger          *zap.Logger
 }
 
-type Config struct {
-	Timeout    time.Duration
-	Backoff    time.Duration
-	MaxRetries int
-}
-
-func NewRoundRobin(backendURLs []string, logger *zap.Logger) (*RoundRobin, error) {
+func NewRoundRobin(config *models.Config, logger *zap.Logger) (*RoundRobin, error) {
+	backendURLs := config.Backends
 	backends := make([]*url.URL, 0, len(backendURLs))
 
 	// Parse backend URLs
@@ -50,15 +41,11 @@ func NewRoundRobin(backendURLs []string, logger *zap.Logger) (*RoundRobin, error
 	}
 
 	rr := &RoundRobin{
-		backends: backends,
-		current:  0,
-		config: Config{
-			Timeout:    10 * time.Second,
-			Backoff:    1 * time.Second,
-			MaxRetries: 3,
-		},
+		backends:        backends,
+		current:         0,
+		config:          config,
 		healthStatus:    make(map[string]bool),
-		healthCheckFreq: 30 * time.Second,
+		healthCheckFreq: config.HealthCheck.Frequency,
 		logger:          logger,
 	}
 
