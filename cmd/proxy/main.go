@@ -38,7 +38,7 @@ func main() {
 	}
 
 	// Initialize load balancer
-	lb, err := loadbalancer.NewRoundRobin(config.Backends, zapLogger)
+	lb, err := loadbalancer.NewRoundRobin(config, zapLogger)
 	if err != nil {
 		zapLogger.Fatal("Failed to initialize load balancer", zap.Error(err))
 	}

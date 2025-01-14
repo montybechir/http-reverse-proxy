@@ -3,17 +3,25 @@ package models
 import "time"
 
 type Config struct {
-	Server    ServerConfig    `mapstructure:"server"`
-	Backends  []string        `mapstructure:"backends"`
-	RateLimit RateLimitConfig `mapstructure:"rate_limit"`
-	CORS      CORSConfig      `mapstructure:"cors"`
-	Logging   LoggingConfig   `mapstructure:"logging"`
+	Server      ServerConfig      `mapstructure:"server"`
+	Backends    []string          `mapstructure:"backends"`
+	RateLimit   RateLimitConfig   `mapstructure:"rate_limit"`
+	CORS        CORSConfig        `mapstructure:"cors"`
+	Logging     LoggingConfig     `mapstructure:"logging"`
+	HealthCheck HealthCheckConfig `mapstructure:"health_check"`
 }
 
 type LoggingConfig struct {
 	Level  string `mapstructure:"level"`
 	Format string `mapstructure:"format"`
 	Output string `mapstructure:"output"`
+}
+
+type HealthCheckConfig struct {
+	Frequency        time.Duration `mapstructure:"frequency"`
+	Timeout          time.Duration `mapstructure:"timeout"`
+	HealthyThreshold int           `mapstructure:"healthy_threshold"`
+	Path             string        `mapstructure:"path"`
 }
 
 type CORSConfig struct {

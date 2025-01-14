@@ -29,6 +29,7 @@ func LoadConfig(path string) (*models.Config, error) {
 	return &config, nil
 }
 
+// LoadBackendConfig is used to load backend pool configs for testing
 func LoadBackendConfig(path string) (*models.BackendConfig, error) {
 	v := viper.New()
 	v.SetConfigFile(path)
@@ -65,15 +66,5 @@ func ValidateConfig(cfg *models.Config) error {
 		return errors.New("rate_limit.burst must be positive")
 	}
 
-	// Add more validation rules as necessary
-
 	return nil
-}
-
-func NewCORSConfig() *models.CORSConfig {
-	return &models.CORSConfig{
-		AllowedOrigins:   []string{},
-		AllowCredentials: true,
-		MaxAge:           300,
-	}
 }

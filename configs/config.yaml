@@ -43,3 +43,9 @@ logging:
   level: "INFO"
   format: "json"
   output: "stdout"
+
+health_check:
+  frequency: 10s
+  timeout: 5s
+  healthy_threshold: 2
+  path: /health
