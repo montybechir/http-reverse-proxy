@@ -181,15 +181,14 @@ reverse-proxy/
 │       ├── rate_limiting.go
 │       └── cors.go
 ├── pkg/
-│   ├── utils/
-│   │   ├── headers.go
-│   │   └── config.go
+│   ├── logger/
+│   │   ├── logger.go
 │   ├── models/
 │   │   ├── config.go
 │   ├── server/
 │   │   ├── server.go
-│   └── healthcheck/
-│       └── healthcheck.go
+│   └── utils/
+│       └── config.go
 ├── configs/
 │   ├── config.yaml
 │   └── backenda.yaml
@@ -266,8 +265,6 @@ To handle increased traffic and ensure high availability, the system can be scal
         Implement more sophisticated load balancing algorithms (e.g., Least Connections, Weighted Round Robin) to optimize request distribution based on backend performance.
     Caching Mechanisms:
         Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
-    Microservices Architecture:
-        Break down components into microservices to allow independent scaling based on demand.
 
 ### Security
 
