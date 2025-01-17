@@ -180,15 +180,14 @@ http-reverse-proxy/
 │       ├── rate_limiting.go
 │       └── cors.go
 ├── pkg/
-│   ├── utils/
-│   │   ├── headers.go
-│   │   └── config.go
+│   ├── logger/
+│   │   ├── logger.go
 │   ├── models/
 │   │   ├── config.go
 │   ├── server/
 │   │   ├── server.go
-│   └── healthcheck/
-│       └── healthcheck.go
+│   └── utils/
+│       └── config.go
 ├── configs/
 │   ├── config.yaml
 │   └── backenda.yaml
