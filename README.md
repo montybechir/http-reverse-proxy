@@ -266,17 +266,11 @@ To handle increased traffic and ensure high availability, the system can be scal
     Enhanced Load Balancing:
         - Implement more sophisticated load balancing algorithms (e.g., Least Connections, Weighted Round Robin) to optimize request distribution based on backend performance.
     Caching Mechanisms:
-<<<<<<< Updated upstream
-        Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
-    Microservices Architecture:
-        Break down components into microservices to allow independent scaling based on demand.
-=======
         - Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
     Redundancy & Failover:
-        - We can achieve high availability via redundancy for failover by having an additional proxy as well. This can be deployed in another region to further reduce the odds of complete loss of access. However, this may introduce data consistency and latency issues.
+        - We can achieve high availability via redundancy for failover by having an additional proxies as well. This can be deployed in another region to further reduce the odds of complete loss of access. However, this may introduce data inconsistency and latency issues.
 
 K8 can be used to manage and auto-scale proxies depending on load.
->>>>>>> Stashed changes
 
 ### Security
 
