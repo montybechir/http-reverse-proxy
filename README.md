@@ -17,7 +17,6 @@ A Go-based HTTP reverse proxy featuring load balancing, rate limiting, and CORS 
     Scaling
     Security Enhancements
     Resources
-    Contact
 
 ## Features
 
@@ -157,7 +156,7 @@ Response from Backend B
 ## Project Structure
 
 ```bash
-reverse-proxy/
+http-reverse-proxy/
 ├── cmd/
 │   └── proxy/
 │       └── main.go
@@ -247,27 +246,29 @@ Design Decisions
         Structured to allow easy integration of alternative algorithms in the future.
 
 Limitations
-Security Features:
-Does not currently support SSL termination or advanced authentication mechanisms.
-Caching & Compression:
-Lacks built-in caching and response compression, which could enhance performance.
-Load Balancing Sophistication:
-Currently limited to Round Robin without considering backend load or response times.
-Error Handling:
-Basic error handling in place; more granular logging and alerting could be beneficial.
+
+    - Does not currently support SSL termination or advanced authentication mechanisms.
+    Caching & Compression:
+    - Lacks built-in caching and response compression, which could enhance performance.
+    Load Balancing Sophistication:
+    - Currently limited to Round Robin without considering backend load or response times.
+    Error Handling:
+    - Basic error handling in place; more granular logging and alerting could be beneficial.
 
 ### Scaling
 
 To handle increased traffic and ensure high availability, the system can be scaled as follows:
 
     Horizontal Scaling:
-        Deploy multiple instances of the proxy server behind a load balancer (e.g., DNS-based load balancing or cloud-native solutions like AWS ELB).
+        - Deploy the load balancer using A records on DNS records using a round-robin setup. However, this would require us to maintain the IP addresses of incoming requests across our proxies to keep track of requests. This would also require us to ensure traffic is only routed to healthy proxies and may introduce cache invalidation headaches.
     Enhanced Load Balancing:
-        Implement more sophisticated load balancing algorithms (e.g., Least Connections, Weighted Round Robin) to optimize request distribution based on backend performance.
+        - Implement more sophisticated load balancing algorithms (e.g., Least Connections, Weighted Round Robin) to optimize request distribution based on backend performance.
     Caching Mechanisms:
-        Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
-    Microservices Architecture:
-        Break down components into microservices to allow independent scaling based on demand.
+        - Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
+    Redundancy & Failover:
+        - We can achieve high availability via redundancy for failover by having an additional proxies as well. This can be deployed in another region to further reduce the odds of complete loss of access. However, this may introduce data inconsistency and latency issues.
+
+K8 can be used to manage and auto-scale proxies depending on load.
 
 ### Security
 
@@ -283,10 +284,13 @@ Enhancing the security posture of the reverse proxy involves several strategies:
     Environment Variable Management:
         Use environment variables or secure key management services (e.g., Azure Key Vault, AWS Secrets Manager) to manage sensitive information like API keys and certificates securely.
     Rate Limiting & Throttling:
-        Enhance rate limiting strategies to include dynamic thresholds based on user roles or IP reputation, etc.
+        Enhance rate limiting strategies to include dynamic thresholds based on user roles or IP reputation, etc. If more than one instance of a proxy is used in our design, we'd need to maintain the request counts across different instances for rate-limitting as well.
     Logging & Monitoring:
         Implement comprehensive logging and monitoring to detect and respond to suspicious activities promptly.
         Integrate with monitoring tools like Prometheus or ELK Stack for real-time insights.
+    Security:
+        To overcome the shortcomings of the current implementation, leveraging Azure Front Door for CDN + Web Application Firewalls would take care of the caching, and security limitations above.
+
 
 ### Resources
 
