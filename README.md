@@ -2,54 +2,56 @@
 
 A Go-based HTTP reverse proxy featuring load balancing, rate limiting, and CORS support. This reverse proxy is designed without relying on third-party implementations or the net/http/httputil package, ensuring a lightweight and customizable solution.
 
+Assumption: the use of other packages unrelated to reverse proxy implementations, such as uber-go/zap for logging, was permitted.
+
 ### Table of Contents
 
-    Features
-    Getting Started
-        Prerequisites
-        Installation
-        Configuration
-        Running the Proxy
-    Usage
-    Project Structure
-    Testing
-    Design Decisions & Limitations
-    Scaling
-    Security Enhancements
-    Resources
+- Features
+- Getting Started
+- Prerequisites
+- Installation
+- Configuration
+- Running the Proxy
+- Usage
+- Project Structure
+- Testing
+- Design Decisions & Limitations
+- Scaling
+- Security Enhancements
+- Resources
 
 ## Features
 
 Load Balancing (Round Robin):
 
-    Distributes incoming requests evenly across healthy backend servers using a simple Round Robin algorithm.
-    Easily extendable to other balancing strategies, such as Least Connections or Weighted Round Robin.
+- Distributes incoming requests evenly across healthy backend servers using a simple Round Robin algorithm.
+- Easily extendable to other balancing strategies, such as Least Connections or Weighted Round Robin.
 
 Rate Limiting:
 
-    Prevents abuse by limiting the number of requests a client can make within a specified timeframe.
-    Configurable to adjust thresholds based on application needs.
+- Prevents abuse by limiting the number of requests a client can make within a specified timeframe.
+- Configurable to adjust thresholds based on application needs.
 
 CORS Support:
 
-    Configurable to allow connections from any origin or restrict to specific hosts.
-    Customizable headers and methods to control cross-origin requests.
+- Configurable to allow connections from any origin or restrict to specific hosts.
+- Customizable headers and methods to control cross-origin requests.
 
 Health Checks with Recovery:
 
-    Continuously monitors the health of backend servers.
-    Automatically reintegrates recovered backends into the pool without manual intervention.
-    Ensures the proxy only forwards requests to active and healthy backends.
+- Continuously monitors the health of backend servers.
+- Automatically reintegrates recovered backends into the pool without manual intervention.
+- Ensures the proxy only forwards requests to active and healthy backends.
 
 Multiple Backend Support:
 
-    Easily configurable to support multiple backend servers via YAML configuration files.
-    Ensures high availability by requiring at least one healthy backend to operate.
+- Easily configurable to support multiple backend servers via YAML configuration files.
+- Ensures high availability by requiring at least one healthy backend to operate.
 
 Docker Integration:
 
-    Dockerfiles provided for the proxy and backend servers for streamlined containerization.
-    docker-compose setup included for easy orchestration and deployment.
+- Dockerfiles provided for the proxy and backend servers for streamlined containerization.
+- docker-compose setup included for easy orchestration and deployment.
 
 ## Prerequisites
 
@@ -69,19 +71,21 @@ git clone git@github.com:montybechir/http-reverse-proxy.git
 
 Configure Docker Resource Sharing:
 
-    Add the project directory (e.g., /Users/montasir/dev/http-reverse-proxy) to Docker's file sharing settings.
-    For Mac:
-        Navigate to Docker -> Preferences... -> Resources -> File Sharing.
-        Add the project directory and apply changes.
-        Restart Docker if necessary.
-        Docker File Sharing Documentation
+Add the project directory (e.g., /Users/montasir/dev/http-reverse-proxy) to Docker's file sharing settings.
+For Mac:
 
-Configuration
+1. Navigate to Docker -> Preferences... -> Resources -> File Sharing.
+2. Add the project directory and apply changes.
+3. Restart Docker if necessary.
+4. Docker File Sharing Documentation
 
-    Edit Configuration Files:
-        Modify /configs/config.yaml to set proxy configurations.
-        Add or update backend configurations in /configs/backenda.yaml and /configs/backendb.yaml.
-        Ensure at least one backend is active to allow the proxy to start successfully.
+### Configuration
+
+Edit Configuration Files:
+
+- Modify /configs/config.yaml to set proxy configurations.
+- Add or update backend configurations in /configs/backenda.yaml and /configs/backendb.yaml.
+- Ensure at least one backend is active to allow the proxy to start successfully.
 
 ### Build and run the container
 
@@ -125,7 +129,7 @@ curl localhost:8080/pleasefowardthiscommand -v
 
 ```
 
-### expected result
+#### Expected result
 
 ```bash
 MB-Machine:~ montasir$ curl localhost:8080/pleasefowardthiscommand -v
@@ -236,36 +240,31 @@ go test ./tests/integration -run TestHealthChecks
 
 Design Decisions
 
-    Language Choice:
-        Go: Selected for its simplicity, high performance, and excellent concurrency support, making it ideal for building scalable network services like reverse proxies.
-    Custom Implementation:
-        Avoided third-party packages and the net/http/httputil package to adhere to the assignment constraints and ensure a deeper understanding of proxy mechanics.
-    Load Balancing Strategy:
-        Implemented Round Robin for its simplicity and even distribution of requests across backends.
-        Structured to allow easy integration of alternative algorithms in the future.
+- Go was selected for its simplicity, high performance, and excellent concurrency support, making it ideal for building scalable network services like reverse proxies.
+- Avoided third-party packages and the net/http/httputil package to adhere to the assignment constraints and ensure a deeper understanding of proxy mechanics.
+- Implemented Round Robin for its simplicity and even distribution of requests across backends.
+- Structured to allow easy integration of alternative algorithms in the future.
 
 Limitations
 
-    - Does not currently support SSL termination or advanced authentication mechanisms.
-    Caching & Compression:
-    - Lacks built-in caching and response compression, which could enhance performance.
-    Load Balancing Sophistication:
-    - Currently limited to Round Robin without considering backend load or response times.
-    Error Handling:
-    - Basic error handling in place; more granular logging and alerting could be beneficial.
+- Does not currently support SSL termination or advanced authentication mechanisms.
+- Caching & Compression: Lacks built-in caching and response compression, which could enhance performance.
+- Load Balancing: Currently limited to Round Robin without considering backend load or response times.
+- Error Handling: Basic error handling in place; more granular logging and alerting could be beneficial.
 
 ### Scaling
 
 To handle increased traffic and ensure high availability, the system can be scaled as follows:
 
-    Horizontal Scaling:
-        - Deploy the load balancer using A records on DNS records using a round-robin setup. However, this would require us to maintain the IP addresses of incoming requests across our proxies to keep track of requests. This would also require us to ensure traffic is only routed to healthy proxies and may introduce cache invalidation headaches.
-    Enhanced Load Balancing:
-        - Implement more sophisticated load balancing algorithms (e.g., Least Connections, Weighted Round Robin) to optimize request distribution based on backend performance.
-    Caching Mechanisms:
-        - Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
-    Redundancy & Failover:
-        - We can achieve high availability via redundancy for failover by having an additional proxies as well. This can be deployed in another region to further reduce the odds of complete loss of access. However, this may introduce data inconsistency and latency issues.
+Horizontal Scaling:
+
+- Deploy the load balancer using A records on DNS records using a round-robin setup. However, this would require us to maintain the IP addresses of incoming requests across our proxies to keep track of requests. This would also require us to ensure traffic is only routed to healthy proxies and may introduce cache invalidation headaches.
+  Enhanced Load Balancing:
+- Implement more sophisticated load balancing algorithms (e.g., Least Connections, Weighted Round Robin) to optimize request distribution based on backend performance.
+  Caching Mechanisms:
+- Integrate a caching layer (e.g., Redis or in-memory caches) to store frequently accessed data, reducing load on backend servers.
+  Redundancy & Failover:
+- We can achieve high availability via redundancy for failover by having an additional proxies as well. This can be deployed in another region to further reduce the odds of complete loss of access. However, this may introduce data inconsistency and latency issues.
 
 K8 can be used to manage and auto-scale proxies depending on load.
 
@@ -273,23 +272,13 @@ K8 can be used to manage and auto-scale proxies depending on load.
 
 Enhancing the security posture of the reverse proxy involves several strategies:
 
-    Input Validation:
-        Implement rigorous validation of incoming requests to prevent common attacks such as SQL injection, Cross-Site Scripting (XSS), and others listed in the OWASP Top 10.
-    TLS/SSL Support:
-        Enable TLS to encrypt data in transit, ensuring secure communication between clients and the proxy.
-        Support SSL termination at the proxy, or opt for end-to-end encryption based on security requirements.
-    Authentication & Authorization:
-        Introduce authentication middleware to enforce API key checks or integrate OAuth/JWT-based authentication.
-    Environment Variable Management:
-        Use environment variables or secure key management services (e.g., Azure Key Vault, AWS Secrets Manager) to manage sensitive information like API keys and certificates securely.
-    Rate Limiting & Throttling:
-        Enhance rate limiting strategies to include dynamic thresholds based on user roles or IP reputation, etc. If more than one instance of a proxy is used in our design, we'd need to maintain the request counts across different instances for rate-limitting as well.
-    Logging & Monitoring:
-        Implement comprehensive logging and monitoring to detect and respond to suspicious activities promptly.
-        Integrate with monitoring tools like Prometheus or ELK Stack for real-time insights.
-    Security:
-        To overcome the shortcomings of the current implementation, leveraging Azure Front Door for CDN + Web Application Firewalls would take care of the caching, and security limitations above.
-
+- Input Validation: Implement rigorous validation of incoming requests to prevent common attacks such as SQL injection, Cross-Site Scripting (XSS), and others listed in the OWASP Top 10.
+- TLS/SSL Support: Enable TLS to encrypt data in transit, ensuring secure communication between clients and the proxy. Support SSL termination at the proxy, or opt for end-to-end encryption based on security requirements.
+- Authentication & Authorization: Introduce authentication middleware to enforce API key checks or integrate OAuth/JWT-based authentication.
+- Environment Variable Management: Use environment variables or secure key management services (e.g., Azure Key Vault, AWS Secrets Manager) to manage sensitive information like API keys and certificates securely.
+- Rate Limiting & Throttling: Enhance rate limiting strategies to include dynamic thresholds based on user roles or IP reputation, etc. If more than one instance of a proxy is used in our design, we'd need to maintain the request counts across different instances for rate-limitting as well.
+- Logging & Monitoring: Implement comprehensive logging and monitoring to detect and respond to suspicious activities promptly. Integrate with monitoring tools like Prometheus or ELK Stack for real-time insights.
+- Security: To overcome the shortcomings of the current implementation, leveraging Azure Front Door for CDN + Web Application Firewalls would take care of the caching, and security limitations above.
 
 ### Resources
 
