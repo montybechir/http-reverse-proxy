@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reverseproxy-deployment
+  labels:
+    app: reverseproxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: reverseproxy
+  template:
+    metadata:
+      labels:
+        app: reverseproxy
+    spec:
+      containers:
+        - name: reverseproxy
+          image: mbnregistry.azurecr.io/reverseproxy/reverseproxy:1
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/configs/config.yaml
+              subPath: config.yaml
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "200m"
+              memory: 128Mi
+      volumes:
+        - name: config-volume
+          configMap:
+            name: proxy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reverseproxy-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: reverseproxy
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

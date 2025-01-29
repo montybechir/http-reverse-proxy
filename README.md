@@ -164,13 +164,10 @@ http-reverse-proxy/
 ├── cmd/
 │   └── proxy/
 │       └── main.go
-│       └── Dockerfile
 │   └── backenda/
 │       └── main.go
-│       └── Dockerfile
 │   └── backendb/
 │       └── main.go
-│       └── Dockerfile
 ├── internal/
 │   ├── proxy/
 │   │   ├── handler.go
@@ -192,6 +189,12 @@ http-reverse-proxy/
 │   │   ├── server.go
 │   └── utils/
 │       └── config.go
+├── deployments/
+│   ├── k8s/
+│   │   ├── proxy-config.yaml
+│   │   └── reverse-proxy.yaml
+│   │   └── webapp.yaml
+│   ├── README.md
 ├── configs/
 │   ├── config.yaml
 │   └── backenda.yaml
@@ -212,7 +215,16 @@ http-reverse-proxy/
 │   │   └── proxy_test.go
 │   │   ├── rate_limiting_test.go
 │   │   └── status_test.go
-│   ├── Dockerfile
+├── build/
+│   ├── package/
+│   │   ├── proxy/
+│   │   │    └── Dockerfile
+│   │   ├── backenda/
+│   │   │    └── Dockerfile
+│   │   ├── backendb/
+│   │   │    └── Dockerfile
+│   │   ├── tests/
+│   │   │    └── Dockerfile
 ├── docker-compose.yaml
 ├── go.mod
 ├── go.sum

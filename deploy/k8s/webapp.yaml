@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webappa-deployment
+  labels:
+    app: webappa
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webappa
+  template:
+    metadata:
+      labels:
+        app: webappa
+    spec:
+      containers:
+        - name: webappa
+          image: mbnregistry.azurecr.io/reverseproxy/webapp:a
+          ports:
+            - containerPort: 60408
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webappa-service
+spec:
+  type: ClusterIP
+  selector:
+    app: webappa
+  ports:
+    - protocol: TCP
+      port: 60408
+      targetPort: 60408
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webappb-deployment
+  labels:
+    app: webappb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webappb
+  template:
+    metadata:
+      labels:
+        app: webappb
+    spec:
+      containers:
+        - name: webappb
+          image: mbnregistry.azurecr.io/reverseproxy/webapp:b
+          ports:
+            - containerPort: 60409
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webappb-service
+spec:
+  type: ClusterIP
+  selector:
+    app: webappb
+  ports:
+    - protocol: TCP
+      port: 60409
+      targetPort: 60409
