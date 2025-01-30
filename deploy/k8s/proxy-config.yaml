@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxy-config
+data:
+  config.yaml: |
+    server:
+      address: ":8080"
+      read_timeout: 5s
+      write_timeout: 10s
+      idle_timeout: 120s
+    backends:
+      - http://webappa-service:60408
+      - http://webappb-service:60409
+    rate_limit:
+      requests_per_minute: 100
+      burst: 10
+    cors:
+      allowed_origins: ["*"]
+    health_check:
+      frequency: 10s
+      path: /health

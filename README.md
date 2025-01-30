@@ -58,6 +58,10 @@ Docker Integration:
 - Docker & Docker Compose
 - Go 1.22+
 
+## Deployment
+
+For detailed deployment instructions see [Deployments Guide](deploy/README.md).
+
 ## Quick Start
 
 ```bash
@@ -91,7 +95,7 @@ Edit Configuration Files:
 
 ```bash
 
-docker-compose up --build
+docker-compose -f deploy/docker-compose.yaml up --build
 
 ```
 
@@ -164,13 +168,10 @@ http-reverse-proxy/
 ├── cmd/
 │   └── proxy/
 │       └── main.go
-│       └── Dockerfile
 │   └── backenda/
 │       └── main.go
-│       └── Dockerfile
 │   └── backendb/
 │       └── main.go
-│       └── Dockerfile
 ├── internal/
 │   ├── proxy/
 │   │   ├── handler.go
@@ -192,6 +193,13 @@ http-reverse-proxy/
 │   │   ├── server.go
 │   └── utils/
 │       └── config.go
+├── deploy/
+│   ├── k8s/
+│   │   ├── proxy-config.yaml
+│   │   └── reverse-proxy.yaml
+│   │   └── webapp.yaml
+├── ├── docker-compose.yaml
+│   ├── README.md
 ├── configs/
 │   ├── config.yaml
 │   └── backenda.yaml
@@ -212,8 +220,16 @@ http-reverse-proxy/
 │   │   └── proxy_test.go
 │   │   ├── rate_limiting_test.go
 │   │   └── status_test.go
-│   ├── Dockerfile
-├── docker-compose.yaml
+├── build/
+│   ├── package/
+│   │   ├── proxy/
+│   │   │    └── Dockerfile
+│   │   ├── backenda/
+│   │   │    └── Dockerfile
+│   │   ├── backendb/
+│   │   │    └── Dockerfile
+│   │   ├── tests/
+│   │   │    └── Dockerfile
 ├── go.mod
 ├── go.sum
 └── README.md

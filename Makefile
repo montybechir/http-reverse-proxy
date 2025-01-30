@@ -1,25 +1,24 @@
 # Makefile  
   
-.PHONY: build docker-build docker-compose-up docker-compose-down test clean  
+.PHONY: build up buld-up down test clean
   
 # Build all services  
 build:  
-	docker-compose build  
+	docker-compose -f deploy/docker-compose.yaml build  
   
 # Build Docker images  
-docker-build:  
-	docker-compose build  
-  
-# Start all services  
-docker-compose-up:  
-	docker-compose up -d  
-  
+up:
+	docker-compose -f deploy/docker-compose.yaml up -d
+
+build-up:
+	docker-compose -f deploy/docker-compose.yaml up --build
+
 # Stop all services  
-docker-compose-down:  
-	docker-compose down --volumes --remove-orphans  
+down:
+	docker-compose -f deploy/docker-compose.yaml down --volumes --remove-orphans
   
 # Run Integration Tests  
-test:  
+test:
 	docker-compose up tests  
   
 # Clean build artifacts  
