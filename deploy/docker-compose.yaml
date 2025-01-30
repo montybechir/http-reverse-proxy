@@ -2,16 +2,16 @@ services:
   # Backend A Service
   backenda:
     build:
-      context: .
+      context: ../.
       dockerfile: build/package/backenda/Dockerfile
     ports:
       - "60408:60408" # Ensure backenda.yaml configures to use port 60408
     networks:
       - reverse-proxy-net
     environment:
-      - CONFIG_PATH=configs/backenda.yaml
+      - CONFIG_PATH=/app/configs/backenda.yaml
     volumes:
-      - ./configs:/app/configs # Mount configs to /app/configs
+      - ../configs:/app/configs # Mount configs to /app/configs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:60408/health"]
       interval: 10s
@@ -21,16 +21,16 @@ services:
   # Backend B Service
   backendb:
     build:
-      context: .
+      context: ../.
       dockerfile: build/package/backendb/Dockerfile
     ports:
       - "60409:60409" # Ensure backendb.yaml configures to use port 60409
     networks:
       - reverse-proxy-net
     environment:
-      - CONFIG_PATH=configs/backendb.yaml
+      - CONFIG_PATH=/app/configs/backendb.yaml
     volumes:
-      - ./configs:/app/configs # Mount configs to /app/configs
+      - ../configs:/app/configs # Mount configs to /app/configs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:60409/health"]
       interval: 10s
@@ -40,7 +40,7 @@ services:
   # Proxy Service
   proxy:
     build:
-      context: .
+      context: ../.
       dockerfile: build/package/proxy/Dockerfile
     ports:
       - "8080:8080" # Ensure config.yaml configures to use port 8080
@@ -50,9 +50,9 @@ services:
     networks:
       - reverse-proxy-net
     environment:
-      - CONFIG_PATH=configs/config.yaml
+      - CONFIG_PATH=/app/configs/config.yaml
     volumes:
-      - ./configs:/app/configs # Mount configs to /app/configs
+      - ../configs:/app/configs # Mount configs to /app/configs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s

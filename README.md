@@ -58,6 +58,10 @@ Docker Integration:
 - Docker & Docker Compose
 - Go 1.22+
 
+## Deployment
+
+For detailed deployment instructions see [Deployments Guide](deploy/README.md).
+
 ## Quick Start
 
 ```bash
@@ -91,7 +95,7 @@ Edit Configuration Files:
 
 ```bash
 
-docker-compose up --build
+docker-compose -f deploy/docker-compose.yaml up --build
 
 ```
 
@@ -189,11 +193,12 @@ http-reverse-proxy/
 │   │   ├── server.go
 │   └── utils/
 │       └── config.go
-├── deployments/
+├── deploy/
 │   ├── k8s/
 │   │   ├── proxy-config.yaml
 │   │   └── reverse-proxy.yaml
 │   │   └── webapp.yaml
+├── ├── docker-compose.yaml
 │   ├── README.md
 ├── configs/
 │   ├── config.yaml
@@ -225,7 +230,6 @@ http-reverse-proxy/
 │   │   │    └── Dockerfile
 │   │   ├── tests/
 │   │   │    └── Dockerfile
-├── docker-compose.yaml
 ├── go.mod
 ├── go.sum
 └── README.md
